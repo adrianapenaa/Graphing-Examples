@@ -1,0 +1,12 @@
+#matplotlib graphing
+
+import matplotlib as mpl
+mpl.get_backend()
+
+import matplotlib.pyplot as plt
+plt.plot?
+
+# we can pass in '.' to plt.plot to indicate that we want
+# the point (3,2) to be indicated with a marker '.'
+plt.plot(3, 2, '.')
+
