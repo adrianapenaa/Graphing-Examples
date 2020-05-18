@@ -1,0 +1,14 @@
+plt.figure()
+xvals = range(len(linear_data))
+plt.bar(xvals, linear_data, width = 0.3)
+
+
+
+new_xvals = []
+
+# plot another set of bars, adjusting the new xvals to make up for the first set of bars plotted
+for item in xvals:
+    new_xvals.append(item+0.3)
+
+plt.bar(new_xvals, exponential_data, width = 0.3 ,color='red')
+
