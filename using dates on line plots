@@ -1,0 +1,25 @@
+#we can try to use pandas
+
+import pandas as pd
+
+plt.figure()
+observation_dates = np.arange('2017-01-01', '2017-01-09', dtype='datetime64[D]')
+observation_dates = list(map(pd.to_datetime, observation_dates)) # convert the map to a list to get rid of the error
+plt.plot(observation_dates, linear_data, '-o',  observation_dates, exponential_data, '-o')
+
+x = plt.gca().xaxis
+
+# rotate the tick labels for the x axis
+for item in x.get_ticklabels():
+    item.set_rotation(45)
+    
+# adjust the subplot so the text doesn't run off the image
+plt.subplots_adjust(bottom=0.25)
+
+ax = plt.gca()
+ax.set_xlabel('Date')
+ax.set_ylabel('Units')
+ax.set_title('Exponential vs. Linear performance')
+
+# you can add mathematical expressions in any text element
+ax.set_title("Exponential ($x^2$) vs. Linear ($x$) performance")
