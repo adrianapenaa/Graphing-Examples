@@ -1,0 +1,26 @@
+# Import useful libraries
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+import numpy as np
+import os
+
+df = pd.read_csv('household income.csv')
+print(df)
+
+x = df['Maryland']
+y1 = df['household median income']
+y2 = df['household median income.1']
+plt.plot(x,y1,'-*', label = "Maryland household median income")
+plt.plot(x,y2,'-o', label = "US household median income")
+
+plt.title('MD vs US household median income(1985-2018)')
+
+plt.legend(frameon=False)
+[plt.gca().spines[loc].set_visible(False) for loc in ['top', 'right']]
+
+plt.ylabel("Household Median Income(Dollars)")
+
+
+
+plt.show()
