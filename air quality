@@ -1,0 +1,69 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+# source = https://www.kaggle.com/rohanrao/air-quality-data-in-india
+# safar air quality scale :http://safar.tropmet.res.in/AQI-47-12-Details
+
+air_q = {'Good':{50:'#377a07'},'Satisfactory':{100:'#9acd32'},'Moderate':{200:'#f4f805'},'Poor':{300:'#f58f09'},'Very Poor':{400:'#c41206'},'Severe':{659:'#910100'}}
+months = ['May19','Jun19','Jul19','Aug19','Sep19','Oct19','Nov19','Dec19','Jan20','Feb20','Mar20','Apr20','May20']
+
+df = pd.read_csv('city_day.csv')
+df.sort_values(by = 'Date')
+
+df = df[df['City'] == 'Delhi']
+df['Year'] = df['Date'].apply(lambda x: x[:4])
+df['Month'] = df['Date'].apply(lambda x: x[5:7])
+df['yymmdd'] = df['Date'].apply(lambda x: x[2:4] + x[5:7] + x[8:])
+
+df = df[['City','Date','Year','Month','yymmdd','AQI','AQI_Bucket']]
+df = df[(df['Year'].astype(int) > 2019) | (df[df['Year'].astype(int) == 2019]['Month'].astype(int) > 4)]
+
+# df.head()
+before_df = df[df['yymmdd'].astype(int) < 200315]
+after_df = df[df['yymmdd'].astype(int) >= 200315]
+
+print(before_df.head())
+print(after_df.head())
+
+#######
+
+plt.figure()
+
+plt.style.use('seaborn-colorblind')
+
+fig= plt.figure(figsize=(14,8))
+axes= fig.add_axes([0,0,0.8,0.8])
+
+axes.plot(before_df.index - 10874, before_df['AQI'], color='blue')
+axes.plot(after_df.index - 10874, after_df['AQI'], color='magenta')
+
+
+temp = 0
+for air_q, info in air_q.items():
+    for value, col in info.items():
+        plt.axhline(y = value, color=col, alpha = 0.8, linestyle = "--")
+        plt.text(371, value - 18, air_q, color=col, size=13)
+        if value == 50:
+            plt.gca().fill_between(range(321), 0, value, facecolor = col, alpha = 0.2)
+            plt.gca().fill_between(range(370), 0, value, facecolor = col, alpha = 0.15)
+            temp = value
+        else:
+            plt.gca().fill_between(range(321), temp, value, facecolor = col, alpha = 0.2)
+            plt.gca().fill_between(range(370), temp, value, facecolor = col, alpha = 0.15)
+            temp = value
+
+
+plt.xticks(np.arange(0,367,30.5),months)
+
+plt.axvline(x = 320, color='grey', alpha = 0.8, linestyle = "--")
+plt.text(321.5, 400, 'After COVID-19 Lockdown', verticalalignment='center',size=15, color='k', bbox=dict(facecolor='grey', alpha = 0.5), rotation=90)
+
+plt.xlabel('Date')
+plt.ylabel('AQI Value')
+plt.title('Air Quality Index of Delhi in Previous year')
+
+plt.gca().spines['top'].set_visible(False)
+plt.gca().spines['right'].set_visible(False)
+
+plt.show()
